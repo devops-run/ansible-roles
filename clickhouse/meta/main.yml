@@ -1,0 +1,11 @@
+---
+galaxy_info:
+  author: Nikolay Korobeynikov
+  description: lesson "Clickhouse Role"
+  company: My Company
+  license: MIT
+  min_ansible_version: 2.10
+  platforms:
+    - name: EL
+      versions:
+          - all

@@ -1,0 +1,47 @@
+---
+# tasks file for clickhouse
+# каталог tasks содержит yaml файлы
+# с описанием того, что должна выполнять эта роль
+# Удобней добавлять несколько yaml файлов с тасками и подключать
+# их в main.yaml. Выполняться будут в той очерёдности, которую укажем
+# рекомендуемая вложенность не юолее 3-х
+- block:
+    - name: Get clickhouse distrib 1
+      ansible.builtin.get_url:
+        url: "https://packages.clickhouse.com/rpm/stable/clickhouse-common-static-{{ clickhouse_version }}.x86_64.rpm"
+        dest: "./clickhouse-common-static-{{ clickhouse_version }}.x86_64.rpm"
+      with_items: "{{ clickhouse_packages }}"
+    - name: Get clickhouse distrib 2
+      ansible.builtin.get_url:
+        url: "https://packages.clickhouse.com/rpm/stable/clickhouse-server-{{ clickhouse_version }}.x86_64.rpm"
+        dest: "./clickhouse-server-{{ clickhouse_version }}.x86_64.rpm"
+      with_items: "{{ clickhouse_packages }}"
+    - name: Get clickhouse distrib 3
+      ansible.builtin.get_url:
+        url: "https://packages.clickhouse.com/rpm/stable/clickhouse-client-{{ clickhouse_version }}.x86_64.rpm"
+        dest: "./clickhouse-client-{{ clickhouse_version }}.x86_64.rpm"
+      with_items: "{{ clickhouse_packages }}"
+  # rescue блок
+  rescue:
+    - name: Get clickhouse distrib
+      ansible.builtin.get_url:
+        url: "https://packages.clickhouse.com/rpm/stable/clickhouse-common-static-{{ clickhouse_version }}.x86_64.rpm"
+        dest: "./clickhouse-common-static-{{ clickhouse_version }}.rpm"
+- name: Install clickhouse packages
+  become: true
+  ansible.builtin.yum:
+    name:
+      - clickhouse-common-static-{{ clickhouse_version }}.x86_64.rpm
+      - clickhouse-client-{{ clickhouse_version }}.x86_64.rpm
+      - clickhouse-server-{{ clickhouse_version }}.x86_64.rpm
+  notify: Start clickhouse service
+- name: Flash handlers
+  ansible.builtin.meta: flush_handlers
+- name: Pause for 10 second for start servises
+  pause:
+    seconds: 10
+- name: Create database
+  ansible.builtin.command: "clickhouse-client -h 127.0.0.1 -q 'create database logs;'"
+  register: create_db
+  failed_when: create_db.rc != 0 and create_db.rc !=82
+  changed_when: create_db.rc == 0
