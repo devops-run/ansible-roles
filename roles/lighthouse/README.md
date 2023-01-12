@@ -1,6 +1,6 @@
 Role Name
 =========
-Установка и настройка БД Clickhouse.
+Установка и настройка Lighthouse.
 
 
 Role Variables
@@ -20,7 +20,7 @@ Including an example of how to use your role (for instance, with variables passe
 
     - hosts: servers
       roles:
-         - { role: clickhouse }
+         - { role: Lighthouse }
 
 License
 -------

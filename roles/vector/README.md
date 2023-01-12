@@ -1,41 +1,26 @@
-Ansible-Role Vector for CentOS 7
+Role Name
 =========
+Установка и настройка Vector.
 
-Role installs Vector on CentOS 7. 
-
-Requirements
-------------
-
-None.
 
 Role Variables
 --------------
+В каталоге "Defaults" хранятся все переменные для этой роли.    
+Тут они могут переопределяться юзером.
 
-Available variables are listed below, along with default values (see defaults/main.yml):
-
-* The version vector to install.
-```yml
-  vector_version: 0.21.1
-```
-* Change server name clickhouse ['clickhouse-01']
-```yml
-  vector_conf_endpoint: http://{{ hostvars['clickhouse-01'].ansible_default_ipv4.address }}:8123
-```
 Dependencies
 ------------
 
-None.
+A list of other roles hosted on Galaxy should go here, plus any details in regards to parameters that may need to be set for other roles, or variables that are used from other roles.
 
 Example Playbook
 ----------------
 
-The simpliest example:
-```yaml
-- name: Install Vector
-  hosts: vector
-  roles:
-    - vector
-```
+Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too:
+
+    - hosts: servers
+      roles:
+         - { role: Vector }
 
 License
 -------
@@ -44,6 +29,4 @@ MIT
 
 Author Information
 ------------------
-
-HW_netolgy
-
+Nikolay Korobeynikov
