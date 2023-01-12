@@ -1,45 +1,26 @@
-Ansible-Role Lighthouse for CentOS 7
+Role Name
 =========
+Установка и настройка БД Clickhouse.
 
-Role installs Lighthouse on CentOS 7. 
-
-Requirements
-------------
-
-None.
 
 Role Variables
 --------------
-
-Available variables are listed below, along with default values (see defaults/main.yml):
-
-* The git repo of lighthouse to install.
-  ```yml
-  lighthouse_vcs: https://github.com/VKCOM/lighthouse.git
-  ```
+В каталоге "Defaults" хранятся все переменные для этой роли.    
+Тут они могут переопределяться юзером.
 
 Dependencies
 ------------
 
-You must first perform the role!
-
-```yaml
-- name: nginx
-  src: git@github.com:PanMonsters/roles_nginx.git
-  scm: git
-```
-This role will install nginx required for lighthouse to work!
+A list of other roles hosted on Galaxy should go here, plus any details in regards to parameters that may need to be set for other roles, or variables that are used from other roles.
 
 Example Playbook
 ----------------
 
-The simpliest example:
-```yaml
-- name: Install Lighthouse
-  hosts: lighthouse
-  roles:
-    - lighthouse
-```
+Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too:
+
+    - hosts: servers
+      roles:
+         - { role: clickhouse }
 
 License
 -------
@@ -48,6 +29,4 @@ MIT
 
 Author Information
 ------------------
-
-HW_netolgy.
-
+Nikolay Korobeynikov
