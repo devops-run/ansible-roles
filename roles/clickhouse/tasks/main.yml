@@ -1,0 +1,63 @@
+---
+- name: Upgrade all packages
+  ansible.builtin.yum:
+    name: "*"
+    state: latest
+- name: Reboot the machine
+  ansible.builtin.reboot:
+######################################
+- block:
+    - name: Get clickhouse distrib 1
+      ansible.builtin.get_url:
+        url: "https://packages.clickhouse.com/rpm/stable/clickhouse-common-static-{{ clickhouse_version }}.x86_64.rpm"
+        dest: "./clickhouse-common-static-{{ clickhouse_version }}.x86_64.rpm"
+      with_items: "{{ clickhouse_packages }}"
+    - name: Get clickhouse distrib 2
+      ansible.builtin.get_url:
+        url: "https://packages.clickhouse.com/rpm/stable/clickhouse-server-{{ clickhouse_version }}.x86_64.rpm"
+        dest: "./clickhouse-server-{{ clickhouse_version }}.x86_64.rpm"
+      with_items: "{{ clickhouse_packages }}"
+    - name: Get clickhouse distrib 3
+      ansible.builtin.get_url:
+        url: "https://packages.clickhouse.com/rpm/stable/clickhouse-client-{{ clickhouse_version }}.x86_64.rpm"
+        dest: "./clickhouse-client-{{ clickhouse_version }}.x86_64.rpm"
+      with_items: "{{ clickhouse_packages }}"
+  # rescue блок
+  rescue:
+    - name: Get clickhouse distrib
+      ansible.builtin.get_url:
+        url: "https://packages.clickhouse.com/rpm/stable/clickhouse-common-static-{{ clickhouse_version }}.x86_64.rpm"
+        dest: "./clickhouse-common-static-{{ clickhouse_version }}.rpm"
+- name: Install clickhouse packages
+  become: true
+  ansible.builtin.yum:
+    name:
+      - clickhouse-common-static-{{ clickhouse_version }}.x86_64.rpm
+      - clickhouse-client-{{ clickhouse_version }}.x86_64.rpm
+      - clickhouse-server-{{ clickhouse_version }}.x86_64.rpm
+  notify: Start clickhouse service
+- name: Flash handlers
+  ansible.builtin.meta: flush_handlers
+- name: Pause for 1 second for start servises
+  pause:
+    seconds: 10
+# создаём базу данных в clickhouse-server и добавляем таблицу
+- name: Create database
+  ansible.builtin.command: "clickhouse-client -h 127.0.0.1 -q 'create database logs;'"
+  register: create_db
+  failed_when: create_db.rc != 0 and create_db.rc !=82
+  changed_when: create_db.rc == 0
+- name: Create table
+  ansible.builtin.command: "clickhouse-client -h 127.0.0.1 -q 'CREATE TABLE IF NOT EXISTS  logs.access_logs ( message String ) ENGINE = MergeTree() ORDER BY tuple()'"
+  register: create_table
+  failed_when: create_table.rc != 0 and create_table.rc !=82
+  changed_when: create_table.rc == 0
+- name: CLICKHOUSE | Create general config
+  become: true
+  ansible.builtin.template:
+    src: templates/clickhouse-conf.xml.j2
+    dest: /etc/clickhouse-server/config.xml
+    mode: "0644"
+  notify: Start clickhouse service
+- name: Reboot the machine with all defaults
+  ansible.builtin.reboot:

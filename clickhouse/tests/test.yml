@@ -1,6 +1,0 @@
----
-# тут тестовый плейбук
-- hosts: localhost
-  remote_user: root
-  roles: 
-    - clickhouse
