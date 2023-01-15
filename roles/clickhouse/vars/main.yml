@@ -1,8 +1,0 @@
----
-# Тут указываем переменные, которыенедоступны
-# для редактированию юзерам
-# переменные в этом каталоге имеют более высокий приоритет
-clickhouse_packages:
-  - clickhouse-client
-  - clickhouse-server
-  - clickhouse-common-static
