@@ -24,5 +24,9 @@ requirements.yml
   scm: git
   version: main
 ```
-![clickhouse](img/Screenshot_21.png)
+http://192.168.1.102/#http://192.168.1.101:8123/?user=netology
+
+![clickhouse](img/Screenshot_23.png)
+
+
 
