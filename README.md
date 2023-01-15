@@ -16,25 +16,21 @@ site.yml
   src: https://github.com/devops-run/ansible-roles.git
   scm: git
   version: main
-  name: clickhouse
 
 - name: vector
   src: https://github.com/devops-run/ansible-roles.git 
   scm: git
   version: main
-  name: vector
 
 - name: nginx
   src: https://github.com/devops-run/ansible-roles.git
   scm: git
   version: main
-  name: nginx  
 
 - name: lighthouse
   src: https://github.com/devops-run/ansible-roles.git
   scm: git
   version: main
-  name: lighthouse
 ```
 ![clickhouse](img/Screenshot_21.png)
 
