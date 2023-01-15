@@ -29,9 +29,10 @@ http://192.168.1.102/#http://192.168.1.101:8123/?user=netology
 
 ![clickhouse](img/Screenshot_23.png)
 
+    
 [clickhouse-role](https://github.com/devops-run/clickhouse-role)
 
-https://github.com/devops-run/lighthouse-role
+[lighthouse-role](https://github.com/devops-run/lighthouse-role)
 
-https://github.com/devops-run/vector-role
+[vector-role](https://github.com/devops-run/vector-role)
 
