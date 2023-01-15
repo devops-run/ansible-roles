@@ -2,33 +2,25 @@
 ---
 Для скачивания ролей использовать команду:   
 
-#### ansible-galaxy install -r requirements.yml -p roles --force 
+#### ansible-galaxy install -r requirements.yml -p roles  
 
-Для скачивания конкретной роли редактировать файл requirements.yml
-
-Плейбук разбит на 4 автонмных роли. Каждая роль может выполняться отдельно.
 
 Совместно проигранные роли в одном плейбуке создадут и сконфигурируют тестовую базу clickhouse, коллектор Vector и прсмотрщик логов lighthouse.
 
-site.yml
+requirements.yml
 ```
 - name: clickhouse
-  src: https://github.com/devops-run/ansible-roles.git
+  src: https://github.com/devops-run/clickhouse-role.git
   scm: git
   version: main
 
 - name: vector
-  src: https://github.com/devops-run/ansible-roles.git 
-  scm: git
-  version: main
-
-- name: nginx
-  src: https://github.com/devops-run/ansible-roles.git
+  src: https://github.com/devops-run/vector-role.git 
   scm: git
   version: main
 
 - name: lighthouse
-  src: https://github.com/devops-run/ansible-roles.git
+  src: https://github.com/devops-run/lighthouse-role.git
   scm: git
   version: main
 ```
