@@ -49,3 +49,4 @@
     - name: Show connect URL lighthouse
       debug:
         msg: "http://{{ ansible_host }}/#http://{{ hostvars['clickhouse-01'].ansible_host }}:8123/?user=netology"
+
