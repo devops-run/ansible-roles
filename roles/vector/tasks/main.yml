@@ -1,6 +1,21 @@
 ---
+- name: Prepare Repo1
+  ansible.builtin.shell: |
+    cd /etc/yum.repos.d/
+    sed -i 's/mirrorlist/#mirrorlist/g' /etc/yum.repos.d/CentOS-*`
+    sed -i 's|#baseurl=http://mirror.centos.org|baseurl=http://vault.centos.org|g' /etc/yum.repos.d/CentOS-*
+  args:
+    warn: no
+  become: true
+  when: ansible_facts["machine"] == "centos8"
 # tasks file for vector-role
 # Скачивание rpm пакета vector для установки
+- name: Install the latest version sudo
+  ansible.builtin.yum:
+    name: sudo
+    state: present
+  when: ansible_facts.distribution == "CentOS"
+##########
 - name: Get Vector distrib | CentOS
   ansible.builtin.get_url:
     url: "https://packages.timber.io/vector/0.21.1/vector-0.21.1-1.{{ ansible_architecture }}.rpm"
@@ -12,6 +27,7 @@
     url: "https://packages.timber.io/vector/0.21.1/vector_0.21.1-1_amd64.deb"
     dest: "./vector_0.21.1-1_amd64.deb"
     mode: 0644
+  #when: ansible_facts["os_name"] == "Ubuntu"
   when: ansible_facts.distribution == "Ubuntu"
 # Установка rpm пакета vector
 - name: Install Vector packages | CentOS
@@ -39,9 +55,10 @@
   become: true
   notify: Start Vector service
 # Создание каталога для sources local_logs, для чего-то требуется Vector-у, без него не стартует, хотя в каталог никаких данных не пишется
+# ansible.builtin.file` or `ansible.legacy.file
 - name: Creates directory
   become: true
-  file:
+  ansible.builtin.file:
     path: /var/lib/vector/local_logs
     state: directory
     owner: "{{ ansible_user_id }}"
@@ -49,16 +66,16 @@
     mode: 0644
 - name: Create systemd unit Vector
   become: true
-  template:
+  ansible.builtin.template:
     src: vector.service.j2
     dest: /etc/systemd/system/vector.service
     mode: 0644
     owner: "{{ ansible_user_id }}"
     group: "{{ ansible_user_gid }}"
 - name: Start Vector service
-  become: true
-  systemd:
-    name: vector
+  ansible.builtin.systemd:
+    #become: true
+    name: vector.service
     state: started
-    daemon_reload: true
+    enabled: yes
   #when: ansible_facts.virtualization_type != "docker"
