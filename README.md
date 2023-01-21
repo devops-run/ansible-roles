@@ -36,3 +36,4 @@ http://192.168.1.102/#http://192.168.1.101:8123/?user=netology
 
 [vector-role](https://github.com/devops-run/vector-role)
 
+
