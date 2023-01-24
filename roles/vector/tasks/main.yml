@@ -74,8 +74,8 @@
     group: "{{ ansible_user_gid }}"
 - name: Start Vector service
   ansible.builtin.systemd:
-    #become: true
+    become: true
     name: vector.service
     state: started
     enabled: yes
-  #when: ansible_facts.virtualization_type != "docker"
+  when: ansible_facts.virtualization_type != "docker"
